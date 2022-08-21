@@ -63,12 +63,20 @@ const CalcWindow = ({
     textAlign: textAlign,
     padding: padding,
   };
+  const formatDecider = (argument: any) => {
+    switch (true) {
+      case argument === undefined:
+        return '';
+      case argument?.length === 1 && argument[0] === '0':
+        return '';
+      default:
+        return formatNumber(argument);
+    }
+  };
   return (
     <View style={windowStyle}>
-      <Text style={styles.arg}>{arg[0] === '0' ? '' : formatNumber(arg)}</Text>
-      <Text style={textStyle}>
-        {value[0] === '0' ? 0 : formatNumber(value)}
-      </Text>
+      <Text style={styles.arg}>{formatDecider(arg)}</Text>
+      <Text style={textStyle}>{formatDecider(value)}</Text>
     </View>
   );
 };

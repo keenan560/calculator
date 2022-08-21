@@ -55,7 +55,7 @@ const App = () => {
       : -1;
 
     switch (true) {
-      case button.type === 'number':
+      case button.type === 'number' && calcState.input.length < 9:
         return setCalcState({
           input: [...currentInput, button.value],
           arg1: currentArg,
@@ -73,8 +73,6 @@ const App = () => {
           arg1: '',
           operator: '',
         });
-      case calcState.input.length >= 9 && button.type === 'number':
-        return calcState.input;
       case button.type === 'function' &&
         button.value !== '=' &&
         button.value !== '+/-':
@@ -155,7 +153,7 @@ const App = () => {
           borderBottomEndRadius={5}
           borderBottomStartRadius={5}
           width="100%"
-          fontSize={Platform.OS === 'android' ? 32 : 60}
+          fontSize={Platform.OS === 'android' ? 32 : 55}
           justifyContent="center"
           textAlign="right"
           padding={10}

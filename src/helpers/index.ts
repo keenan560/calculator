@@ -31,6 +31,8 @@ const evaluate = (
 ) => {
   console.log('here');
   switch (true) {
+    case !arg1 || !arg2 || !operator:
+      return arg2;
     case operator === '+':
       return add(arg1, arg2);
     case operator === '-':
@@ -44,8 +46,12 @@ const evaluate = (
 
 const formatNumber = (num: any) => {
   console.log(num);
+
   if (typeof num === 'string') {
     return '';
+  }
+  if (typeof num === 'object' && num[0] === '.') {
+    return num;
   }
 
   if (typeof num === 'object') {

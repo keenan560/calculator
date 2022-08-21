@@ -1,9 +1,10 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {formatNumber} from '../helpers';
 
 type Props = {
-  arg: string | number | undefined;
-  value: string | number;
+  arg: string[] | number[] | undefined;
+  value: string | number[] | undefined;
   color: string;
   width: number;
   height: number;
@@ -23,7 +24,7 @@ type Props = {
 };
 
 const CalcWindow = ({
-  arg = '',
+  arg,
   value,
   color,
   backgroundColor,
@@ -64,8 +65,10 @@ const CalcWindow = ({
   };
   return (
     <View style={windowStyle}>
-      <Text style={styles.arg}>{arg}</Text>
-      <Text style={textStyle}>{value}</Text>
+      <Text style={styles.arg}>{arg[0] === '0' ? '' : formatNumber(arg)}</Text>
+      <Text style={textStyle}>
+        {value[0] === '0' ? 0 : formatNumber(value)}
+      </Text>
     </View>
   );
 };

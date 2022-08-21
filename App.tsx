@@ -96,15 +96,11 @@ const App = () => {
           input: [
             evaluate(calcState.arg1, calcState.input, calcState.operator),
           ],
-          arg1: [],
+          arg1: ['0'],
           operator: '',
         });
     }
   };
-
-  console.log('the input is  ' + calcState.input);
-  console.log(calcState.arg1);
-  console.log('the operator is ' + calcState.operator);
 
   useEffect(() => {
     setCalcState({

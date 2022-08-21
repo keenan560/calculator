@@ -42,4 +42,17 @@ const evaluate = (
   }
 };
 
-export {evaluate};
+const formatNumber = (num: any) => {
+  console.log(num);
+  if (typeof num === 'string') {
+    return '';
+  }
+
+  if (typeof num === 'object') {
+    let number = parseFloat(num?.join(''));
+
+    return number.toLocaleString('en-US');
+  }
+};
+
+export {evaluate, formatNumber};

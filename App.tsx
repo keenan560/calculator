@@ -9,17 +9,20 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Dimensions, Image} from 'react-native';
+import {StyleSheet, View, Dimensions, Image, Platform} from 'react-native';
 import {CalcButton, CalcWindow, TextContent} from './src/components';
 import {calcButttons} from './src/constants';
 import pkjson from './package.json';
 import logo from './src/assets/logo.png';
+import {evaluate} from './src/helpers';
 
 const width = Dimensions.get('screen').width;
 const height = Dimensions.get('screen').height;
 
 interface Calculator {
   input: string[] | number[];
+  arg1: string[] | number[];
+  operator: string | undefined;
   calculatorButtons: {}[];
   row1: {}[];
   row2: {}[];
@@ -31,6 +34,8 @@ interface Calculator {
 const App = () => {
   const [calcState, setCalcState] = useState<Calculator>({
     input: [],
+    arg1: [],
+    operator: '',
   });
   const [buttons, setButtons] = useState<Calculator>({
     calculatorButtons: calcButttons,
@@ -41,22 +46,69 @@ const App = () => {
     row5: [],
   });
 
-  const handlePress = (value: string | number) => {
-    console.log(value);
-    if (value === 'AC') {
-      return setCalcState({
-        input: '',
-      });
-    }
+  const handlePress = (button: {type: string; value: string}) => {
     let currentInput = calcState.input;
-    setCalcState({
-      input: [...currentInput, value],
-    });
+    let currentArg = calcState.arg1;
+    let operator = calcState.operator;
+    let opposite = calcState.input
+      ? parseFloat(currentInput?.join('')) * -1
+      : -1;
+
+    switch (true) {
+      case button.type === 'number':
+        return setCalcState({
+          input: [...currentInput, button.value],
+          arg1: currentArg,
+          operator: operator,
+        });
+      case button.value === '+/-':
+        return setCalcState({
+          input: [opposite],
+          arg1: currentArg,
+          operator: operator,
+        });
+      case button.value === 'AC':
+        return setCalcState({
+          input: '',
+          arg1: '',
+          operator: '',
+        });
+      case calcState.input.length >= 9 && button.type === 'number':
+        return calcState.input;
+      case button.type === 'function' &&
+        button.value !== '=' &&
+        button.value !== '+/-':
+        return setCalcState({
+          input: '',
+          arg1: currentInput,
+          operator: button.value,
+        });
+
+      case calcState.arg1 && button.type === 'number':
+        return setCalcState({
+          input: [...currentInput, button.value],
+          arg1: currentArg,
+          operator: operator,
+        });
+
+      case button.value === '=':
+        return setCalcState({
+          input: [
+            evaluate(calcState.arg1, calcState.input, calcState.operator),
+          ],
+          arg1: [],
+          operator: '',
+        });
+    }
   };
+
+  console.log('the input is  ' + calcState.input);
+  console.log(calcState.arg1);
+  console.log('the operator is ' + calcState.operator);
 
   useEffect(() => {
     setCalcState({
-      input: ['0'],
+      input: [],
     });
     setButtons({
       row1: calcButttons.filter((button, idx) => idx >= 0 && idx < 4),
@@ -78,7 +130,7 @@ const App = () => {
             width: '100%',
             justifyContent: 'center',
             alignItems: 'center',
-            marginTop: 60,
+            marginTop: Platform.OS === 'android' ? 0 : 23,
             padding: 20,
             borderTopEndRadius: 40,
             borderTopLeftRadius: 40,
@@ -101,12 +153,13 @@ const App = () => {
           </View>
         </View>
         <CalcWindow
-          value={calcState.input ? calcState.input : '0'}
-          height={height * 0.15}
+          arg={calcState.arg1}
+          value={calcState.input.length ? calcState.input : '0'}
+          height={Platform.OS === 'android' ? height * 0.12 : height * 0.15}
           borderBottomEndRadius={5}
+          borderBottomStartRadius={5}
           width="100%"
-          fontSize={60}
-          marginTop={0}
+          fontSize={Platform.OS === 'android' ? 32 : 60}
           justifyContent="center"
           textAlign="right"
           padding={10}
@@ -119,8 +172,8 @@ const App = () => {
           {buttons.row1?.map((button, idx) => (
             <CalcButton
               key={idx}
-              onPress={() => handlePress(button.value)}
-              borderRadius={5}
+              onPress={() => handlePress(button)}
+              borderRadius={15}
               color={button.type === 'function' ? '#fff' : '#03020A'}
               backgroundColor={button.type === 'function' ? '#03020A' : '#fff'}
               fontWeight="900"
@@ -143,8 +196,8 @@ const App = () => {
           {buttons.row2?.map((button, idx) => (
             <CalcButton
               key={idx}
-              onPress={() => handlePress(button.value)}
-              borderRadius={5}
+              onPress={() => handlePress(button)}
+              borderRadius={15}
               color={button.type === 'function' ? '#fff' : '#03020A'}
               backgroundColor={button.type === 'function' ? '#03020A' : '#fff'}
               fontWeight="900"
@@ -167,8 +220,8 @@ const App = () => {
           {buttons.row3?.map((button, idx) => (
             <CalcButton
               key={idx}
-              onPress={() => handlePress(button.value)}
-              borderRadius={5}
+              onPress={() => handlePress(button)}
+              borderRadius={15}
               color={button.type === 'function' ? '#fff' : '#03020A'}
               backgroundColor={button.type === 'function' ? '#03020A' : '#fff'}
               fontWeight="900"
@@ -191,8 +244,8 @@ const App = () => {
           {buttons.row4?.map((button, idx) => (
             <CalcButton
               key={idx}
-              onPress={() => handlePress(button.value)}
-              borderRadius={5}
+              onPress={() => handlePress(button)}
+              borderRadius={15}
               color={button.type === 'function' ? '#fff' : '#03020A'}
               backgroundColor={button.type === 'function' ? '#03020A' : '#fff'}
               fontWeight="900"
@@ -215,14 +268,14 @@ const App = () => {
           {buttons.row5?.map((button, idx) => (
             <CalcButton
               key={idx}
-              onPress={() => handlePress(button.value)}
-              borderRadius={5}
+              onPress={() => handlePress(button)}
+              borderRadius={15}
               color={button.type === 'function' ? '#fff' : '#03020A'}
               backgroundColor={button.type === 'function' ? '#03020A' : '#fff'}
               fontWeight="900"
               fontSize={20}
               title={button.value}
-              width={button.value === 0 ? (width * 0.83) / 2 : 60}
+              width={button.value === 0 ? 163 : 60}
               height={60}
               justifyContent="center"
               textAlign="center"
@@ -236,7 +289,11 @@ const App = () => {
           ))}
         </View>
         <TextContent
-          value={'App Version: ' + pkjson.version}
+          value={
+            'App Version : ' +
+            pkjson.version +
+            `(${process.env.NODE_ENV === 'production' ? 'prod' : 'dev'})`
+          }
           fontSize={14}
           color="#fff"
           fontWeight="bold"
@@ -267,7 +324,6 @@ const styles = StyleSheet.create({
   buttonRow: {
     flexDirection: 'row',
     width: '100%',
-    // marginLeft: 10,
     marginRight: 10,
     padding: 10,
     alignItems: 'center',
@@ -276,7 +332,6 @@ const styles = StyleSheet.create({
   buttonRowLast: {
     flexDirection: 'row',
     width: '100%',
-    // marginLeft: 10,
     marginRight: 10,
     padding: 10,
     justifyContent: 'space-between',

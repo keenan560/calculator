@@ -1,7 +1,8 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 
 type Props = {
+  arg: string | number | undefined;
   value: string | number;
   color: string;
   width: number;
@@ -18,9 +19,11 @@ type Props = {
   marginBottom: number | undefined;
   borderColor: number | undefined;
   borderBottomEndRadius: number | undefined;
+  borderBottomStartRadius: number | undefined;
 };
 
 const CalcWindow = ({
+  arg = '',
   value,
   color,
   backgroundColor,
@@ -37,6 +40,7 @@ const CalcWindow = ({
   marginBottom,
   borderColor,
   borderBottomEndRadius,
+  borderBottomStartRadius,
 }: Props) => {
   const windowStyle = {
     backgroundColor: backgroundColor,
@@ -47,8 +51,9 @@ const CalcWindow = ({
     marginTop: marginTop,
     justifyContent: justifyContent,
     marginBottom: marginBottom,
-    borderColor,
-    borderBottomEndRadius,
+    borderColor: borderColor,
+    borderBottomEndRadius: borderBottomEndRadius,
+    borderBottomStartRadius: borderBottomStartRadius,
   };
   const textStyle = {
     color: color,
@@ -59,9 +64,20 @@ const CalcWindow = ({
   };
   return (
     <View style={windowStyle}>
+      <Text style={styles.arg}>{arg}</Text>
       <Text style={textStyle}>{value}</Text>
     </View>
   );
 };
 
 export default CalcWindow;
+
+const styles = StyleSheet.create({
+  arg: {
+    textAlign: 'right',
+    fontSize: 25,
+    position: 'relative',
+    top: 12,
+    paddingRight: 12,
+  },
+});

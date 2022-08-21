@@ -28,7 +28,7 @@ export const calcButttons = [
     type: 'number',
   },
   {
-    value: 'X',
+    value: 'x',
     type: 'function',
   },
   {

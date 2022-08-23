@@ -23,6 +23,7 @@ interface Calculator {
   input: string[] | number[];
   arg1: string[] | number[];
   operator: string | undefined;
+  bothArgs: boolean;
   calculatorButtons: {}[];
   row1: {}[];
   row2: {}[];
@@ -37,6 +38,11 @@ const App = () => {
     arg1: [],
     operator: '',
   });
+
+  const [areBothArgs, setAreBothArgs] = useState<Calculator>({
+    bothArgs: false,
+  });
+
   const [buttons, setButtons] = useState<Calculator>({
     calculatorButtons: calcButttons,
     row1: [],
@@ -113,11 +119,19 @@ const App = () => {
           input: [
             evaluate(calcState.arg1, calcState.input, calcState.operator),
           ],
-          arg1: [],
+          arg1: '',
           operator: '',
         });
     }
   };
+
+  useEffect(() => {
+    calcState.input && calcState.arg1
+      ? setAreBothArgs(true)
+      : setAreBothArgs(false);
+  }, [calcState.arg1, calcState.input]);
+
+  console.log(areBothArgs);
 
   useEffect(() => {
     setCalcState({
@@ -297,6 +311,7 @@ const App = () => {
               padding={10}
               type={''}
               value={''}
+              bothArgs={areBothArgs}
               borderWidth={undefined}
               marginBottom={undefined}
             />

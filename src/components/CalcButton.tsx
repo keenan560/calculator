@@ -19,12 +19,14 @@ interface Button {
   textAlign: string | undefined;
   justifyContent: string | undefined;
   alignItems: string | undefined;
+  bothArgs: boolean | undefined;
 }
 
 const CalcButton = ({
   title,
   type,
   value,
+  bothArgs,
   color,
   backgroundColor,
   borderRadius,
@@ -41,7 +43,7 @@ const CalcButton = ({
   onPress,
 }: Button) => {
   const buttonStyle = {
-    backgroundColor: backgroundColor,
+    backgroundColor: bothArgs && title === '=' ? '#FEEA82' : backgroundColor,
     borderRadius: borderRadius,
     borderWidth: borderWidth,
     marginBottom: marginBottom,
@@ -54,7 +56,7 @@ const CalcButton = ({
   };
 
   const textStyle = {
-    color,
+    color: bothArgs && title === '=' ? '#000' : color,
     fontSize: fontSize,
     fontWeight: fontWeight,
   };

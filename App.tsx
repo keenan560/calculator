@@ -321,7 +321,9 @@ const App = () => {
           value={
             'App Version : ' +
             pkjson.version +
-            `(${process.env.NODE_ENV === 'production' ? 'prod' : 'dev'})`
+            `(${process.env.NODE_ENV === 'production' ? 'prod' : 'dev'}) ${
+              Platform.OS
+            }`
           }
           fontSize={14}
           color="#fff"

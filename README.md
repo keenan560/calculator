@@ -4,6 +4,6 @@ Built using React Native, I was able to model a what a TI 30X calculator would l
 
 # Instructions
 
-1. clone project `git clone`
+1. clone project `git clone https://github.com/keenan560/calculator.git`
 2. install modules/dependecies `npm install && cd ios && pod install && cd ..`
 3. Run on Android `npm run android` or Run on iOS `npm run ios`

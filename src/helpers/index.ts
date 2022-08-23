@@ -45,7 +45,7 @@ const evaluate = (
 };
 
 const formatNumber = (num: any) => {
-  console.log(num);
+  console.log('the number is', num);
 
   if (typeof num === 'string') {
     return '';

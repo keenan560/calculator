@@ -53,7 +53,9 @@ const App = () => {
     let opposite = calcState.input
       ? parseFloat(currentInput?.join('')) * -1
       : -1;
-
+    let percentForm = calcState.input
+      ? parseFloat(currentInput?.join('')) / 100
+      : '';
     switch (true) {
       case button.type === 'number' && calcState.input.length < 9:
         return setCalcState({
@@ -67,12 +69,29 @@ const App = () => {
           arg1: currentArg,
           operator: operator,
         });
+      case button.value === '%':
+        return setCalcState({
+          input: [percentForm],
+          arg1: currentArg,
+          operator: operator,
+        });
       case button.value === 'AC':
         return setCalcState({
           input: '',
           arg1: '',
           operator: '',
         });
+      case calcState.input &&
+        calcState.arg1 &&
+        button.type === 'function' &&
+        button.value !== '=' &&
+        button.value !== '+/-':
+        return setCalcState({
+          input: [],
+          arg1: [evaluate(calcState.arg1, calcState.input, calcState.operator)],
+          operator: button.value,
+        });
+
       case button.type === 'function' &&
         button.value !== '=' &&
         button.value !== '+/-':
@@ -94,7 +113,7 @@ const App = () => {
           input: [
             evaluate(calcState.arg1, calcState.input, calcState.operator),
           ],
-          arg1: ['0'],
+          arg1: [],
           operator: '',
         });
     }
@@ -148,12 +167,13 @@ const App = () => {
         </View>
         <CalcWindow
           arg={calcState.arg1}
-          value={calcState.input.length ? calcState.input : '0'}
-          height={Platform.OS === 'android' ? height * 0.12 : height * 0.15}
+          value={calcState.input.length ? calcState.input : ['0']}
+          operator={calcState?.operator}
+          height={Platform.OS === 'android' ? height * 0.15 : height * 0.15}
           borderBottomEndRadius={5}
           borderBottomStartRadius={5}
           width="100%"
-          fontSize={Platform.OS === 'android' ? 32 : 55}
+          fontSize={Platform.OS === 'android' ? 32 : 50}
           justifyContent="center"
           textAlign="right"
           padding={10}

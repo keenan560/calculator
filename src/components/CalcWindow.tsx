@@ -5,6 +5,7 @@ import {formatNumber} from '../helpers';
 type Props = {
   arg: string[] | number[] | undefined;
   value: string | number[] | undefined;
+  operator: string | undefined;
   color: string;
   width: number;
   height: number;
@@ -26,6 +27,7 @@ type Props = {
 const CalcWindow = ({
   arg,
   value,
+  operator,
   color,
   backgroundColor,
   borderWidth,
@@ -64,10 +66,11 @@ const CalcWindow = ({
     padding: padding,
   };
   const formatDecider = (argument: any) => {
+    console.log(argument);
     switch (true) {
       case argument === undefined:
         return '';
-      case argument?.length === 1 && argument[0] === '0':
+      case argument?.length === 0:
         return '';
       default:
         return formatNumber(argument);
